@@ -68,6 +68,8 @@ const bird = {
   height: 24, // source cut size
   x: 10,
   y: 50,
+  gravity: 0.25,
+  velocity: 0,
   draw() {
     context.drawImage(
       sprites,
@@ -77,12 +79,18 @@ const bird = {
       bird.width, bird.height,
     );
   },
+  update() {
+    bird.velocity += bird.gravity;
+    bird.y += bird.velocity;
+  }
 }
 
 function loop() {
+  bird.update();
+
   background.draw();
-  bird.draw();
   floor.draw();
+  bird.draw();
 
   requestAnimationFrame(loop);
 }
