@@ -85,14 +85,67 @@ const bird = {
   }
 }
 
-function loop() {
-  bird.update();
+const getReadyMessage = {
+  sourceX: 134,
+  sourceY: 0,
+  width: 174,
+  height: 152,
+  x: (canvas.width / 2) - 174 / 2,
+  y: 50,
+  draw () {
+    context.drawImage(
+      sprites, 
+      getReadyMessage.sourceX, getReadyMessage.sourceY, 
+      getReadyMessage.width, getReadyMessage.height, 
+      getReadyMessage.x, getReadyMessage.y, 
+      getReadyMessage.width, getReadyMessage.height
+    );
+  },
+}
 
-  background.draw();
-  floor.draw();
-  bird.draw();
+let activeScreen = {}
+function changeScreen(newScreen) {
+  activeScreen = newScreen;
+}
+
+const screens = {
+  HOME: {
+    draw () {
+      background.draw();
+      floor.draw();
+      bird.draw();
+      getReadyMessage.draw();
+    },
+    click() {
+      changeScreen(screens.GAME);
+    },
+    update () {
+    }
+  },
+  GAME: {
+    draw () {
+      background.draw();
+      floor.draw();
+      bird.draw();
+    },
+    update () {
+      bird.update();
+    },
+  }
+}
+
+function loop() {
+  activeScreen.draw();
+  activeScreen.update();
 
   requestAnimationFrame(loop);
 }
 
+window.addEventListener('click', function (){
+  if(activeScreen.click) {
+    activeScreen.click();
+  }
+});
+
+changeScreen(screens.HOME);
 loop();
